@@ -8,7 +8,7 @@
 (def gmail-username (env :gmail-username))
 (def gmail-password (env :gmail-password))
 
-(def ourdaily-store (gen-store gmail-username gmail-password))
+(defn ourdaily-store [] (gen-store gmail-username gmail-password))
 
 (defn- yesterday-from [date-time-obj]
   (.minusHours date-time-obj 24))
@@ -38,4 +38,4 @@
   ((comp
     (partial map read-message)
     (partial take-while (is-after date-time-obj)))
-      (inbox ourdaily-store)))
+      (inbox (ourdaily-store))))
