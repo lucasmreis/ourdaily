@@ -8,34 +8,20 @@
 (def gmail-username (env :gmail-username))
 (def gmail-password (env :gmail-password))
 
+(defn- read-message [m] {:msg (message/read-message m) :date-sent (.getSentDate m)})
+
+(defn- last-day-from [date-time-obj]
+ (.minusHours date-time-obj 24))
+
+(defn- is-in-last-day-from [date-time-obj]
+ (fn [msg]
+  (t/after? (c/from-date (:date-sent msg)) (last-day-from date-time-obj))))
+
+;; --------------------------------
+;; public
+;; --------------------------------
+
 (defn ourdaily-store [] (gen-store gmail-username gmail-password))
 
-(defn- yesterday-from [date-time-obj]
-  (.minusHours date-time-obj 24))
-
-(defn- is-after [date-time-obj]
-  (fn [msg]
-    (t/after? (c/from-date (.getSentDate msg)) (yesterday-from date-time-obj))))
-
-(defmacro safe-get
-  "try to perform an action else just return nil"
-  [& body]
-  `(try
-    (do ~@body)
-  (catch Exception e#
-    nil)))
-
-(defn- read-message [msg]
-  (try
-    {:from (safe-get (.getSender msg))
-     :subject (safe-get (.getSubject msg))
-     :sent-date (safe-get (.getSentDate msg))
-     :content (safe-get (message/message-body msg)) }
-  (catch Exception e {:error e})))
-
-(defn get-messages-after
-  [date-time-obj store]
-  ((comp
-    (partial map read-message)
-    (partial take-while (is-after date-time-obj)))
-      (inbox (ourdaily-store))))
+(defn get-messages-from [date-time-obj store]
+ (map :msg (take-while (is-in-last-day-from date-time-obj) (map read-message (inbox store)))))
