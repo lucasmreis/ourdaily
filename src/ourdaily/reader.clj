@@ -1,4 +1,4 @@
-(ns ourdaily.mail
+(ns ourdaily.reader
   (:require [clojure-mail.core :refer :all]
             [clojure-mail.message :as message]
             [environ.core :refer [env]]
@@ -25,3 +25,5 @@
 
 (defn get-messages-from [date-time-obj store]
  (map :msg (take-while (is-in-last-day-from date-time-obj) (map read-message (inbox store)))))
+
+(defn get-messages [] (get-messages-from (t/now) (ourdaily-store)))

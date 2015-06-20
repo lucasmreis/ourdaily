@@ -1,4 +1,4 @@
-(ns ourdaily.send
+(ns ourdaily.sender
   (:require [postal :refer [send-message]]
             [environ.core :refer [env]]))
 
@@ -9,6 +9,9 @@
            :ssl true
            :user email
            :pass pass})
+
+
+(defn send [msg] (send-message conn msg))
 
 ;; (send-message conn {:from email
 ;;                     :to email
