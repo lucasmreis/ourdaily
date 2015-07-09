@@ -1,5 +1,5 @@
 (ns ourdaily.sender
-  (:require [postal :refer [send-message]]
+  (:require [postal.core :refer [send-message]]
             [environ.core :refer [env]]))
 
 (def gmail-username (env :gmail-username))
@@ -7,11 +7,11 @@
 
 (def conn {:host "smtp.gmail.com"
            :ssl true
-           :user email
-           :pass pass})
+           :user gmail-username
+           :pass gmail-password})
 
 
-(defn send [msg] (send-message conn msg))
+;; (defn send [msg] (send-message conn msg))
 
 ;; (send-message conn {:from email
 ;;                     :to email
