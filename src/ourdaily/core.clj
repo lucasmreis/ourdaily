@@ -20,9 +20,13 @@
   (not (or (nil? (:project m)) (nil? (:user m)))))
 
 (defn start []
-  (->> (get-messages (:username server-user) (:password server-user) hours-window)
-       (map (partial attach-project db/projects))
-       (map (partial attach-user db/users))
-       (filter is-valid)
-       (map attach-contents)
-       (group-by :project)))
+  (let [messages        (get-messages (:username server-user) (:password server-user) hours-window)
+        partial-project (partial attach-project db/projects)
+        partial-user    (partial attach-user db/users)]
+
+    (->> messages
+         (map partial-project)
+         (map partial-user)
+         (filter is-valid)
+         (map attach-contents)
+         (group-by :project))))
