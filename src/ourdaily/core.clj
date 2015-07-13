@@ -10,20 +10,16 @@
 (def server-user {:username (env :server-username)
                   :password (env :server-password)})
 
-(def tokens {:subject "#ourdaily"
-             :did "#did"
+(def tokens {:subject     "#ourdaily"
+             :did         "#did"
              :impediments "#impediments"
-             :end "#end"})
+             :end         "#end"})
 
 ;; -----
 
-(defn is-user [m] (contains? users (.getAddress (:from m))))
+;; (defn is-user [m] (contains? users (:email (:user m))))
 
-(defn is-ourdaily [m] (re-find (re-pattern (:subject tokens)) (:subject m)))
+;; (defn is-ourdaily [m] (re-find (re-pattern (:subject tokens)) (:subject m)))
 
 (defn start []
-  (->> (get-messages (:username server-user) (:password server-user) 10)
-       (filter is-user)
-       (filter is-ourdaily)))
-
-
+  (get-messages (:username server-user) (:password server-user) 240))
