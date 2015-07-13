@@ -13,7 +13,7 @@
 ;; app data
 
 (def db-projects {:id :name
-                  :items #{{:name "Primeiro Projeto"}}})
+                  :items #{{:name "ourdaily" :title "Primeiro Projeto"}}})
 
 (def db-users {:id :email
                :items #{{:email "lucasmreis@gmail.com" :name "Lucas Reis"}
