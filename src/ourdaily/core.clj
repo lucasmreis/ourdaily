@@ -3,23 +3,14 @@
             [ourdaily.reader :refer [get-messages]]))
 
 
-;; CONFIG DATA
-
-(def users #{"lucasmreis@gmail.com" "lucas@stereocause.com"})
+;; config
 
 (def server-user {:username (env :server-username)
                   :password (env :server-password)})
 
-(def tokens {:subject     "#ourdaily"
-             :did         "#did"
-             :impediments "#impediments"
-             :end         "#end"})
+(def hours-window 240)
 
-;; -----
-
-;; (defn is-user [m] (contains? users (:email (:user m))))
-
-;; (defn is-ourdaily [m] (re-find (re-pattern (:subject tokens)) (:subject m)))
+;; ---
 
 (defn start []
-  (get-messages (:username server-user) (:password server-user) 240))
+  (get-messages (:username server-user) (:password server-user) hours-window))
