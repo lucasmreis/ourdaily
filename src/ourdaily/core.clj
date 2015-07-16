@@ -4,7 +4,8 @@
             [ourdaily.reader :refer [get-messages]]
             [ourdaily.parser.project :refer [attach-project]]
             [ourdaily.parser.user :refer [attach-user]]
-            [ourdaily.parser.contents :refer [attach-contents]]))
+            [ourdaily.parser.contents :refer [attach-contents]]
+            [ourdaily.render :refer [render-digest]]))
 
 
 ;; config
@@ -20,13 +21,18 @@
   (not (or (nil? (:project m)) (nil? (:user m)))))
 
 (defn start []
-  (let [messages        (get-messages (:username server-user) (:password server-user) hours-window)
-        partial-project (partial attach-project db/projects)
-        partial-user    (partial attach-user db/users)]
+  (let [user             (:username server-user)
+        password         (:password server-user)
+        messages         (get-messages user password hours-window)
+        p-attach-project (partial attach-project db/projects)
+        p-attach-user    (partial attach-user db/users)]
 
     (->> messages
-         (map partial-project)
-         (map partial-user)
+         (map p-attach-project)
+         (map p-attach-user)
          (filter is-valid)
          (map attach-contents)
-         (group-by :project))))
+         (map db/join-to-msg)
+         (group-by #(:name (:project %)))
+         (vals)
+         (map render-digest))))

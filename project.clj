@@ -7,5 +7,6 @@
                  [io.forward/clojure-mail "1.0"]
                  [com.draines/postal "1.11.3"]
                  [environ "1.0.0"]
-                 [clj-time "0.9.0"]]
+                 [clj-time "0.9.0"]
+                 [hiccup "1.0.5"]]
   :repl-options {:init-ns ourdaily.core})

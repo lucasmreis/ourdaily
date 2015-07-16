@@ -3,7 +3,6 @@
 
 ;; functions to turn db schema into maps with keys as id
 
-
 (defn build-map [db]
   (let [items    (:items db)
         id       (:id db)
@@ -23,3 +22,7 @@
 
 (def users (build-map db-users))
 
+(defn join-to-msg [m]
+  (-> m
+    (assoc :user    (users (:user m)))
+    (assoc :project (projects (:project m)))))
